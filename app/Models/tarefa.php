@@ -8,7 +8,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class Tarefa extends Authenticatable
 {
     protected $table = 'tarefas';
-    protected $primaryKey = 'id';
 
     protected $fillable = [
         'nome',

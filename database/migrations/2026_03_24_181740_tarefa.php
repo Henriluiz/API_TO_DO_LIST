@@ -18,6 +18,7 @@ return new class extends Migration
            $table->date('DataLimite');
            $table->enum('tipo', ['Trabalho', 'Estudo', 'Lazer']);
            $table->enum('StatusTarefa', ['Pendente','Em Andamento', 'Concluída']);
+           $table->timestamps();
         });
     }
 

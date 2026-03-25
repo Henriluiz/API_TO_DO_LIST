@@ -46,10 +46,10 @@ class TarefasController extends Controller
         }
     }
 
-    public function tarefa(Request $request)
+    public function tarefa()
     {
         try{
-            $tarefas = $request->Tarefa();
+            $tarefas = Tarefa::all();;
 
             return response()->json([
                 'tarefa' => $tarefas,
@@ -63,30 +63,54 @@ class TarefasController extends Controller
         }
     }
 
+    public function show($id)
+    {
+        $tarefa = Tarefa::find($id);
 
-    public function update(Request $request)
+        if (!$tarefa) {
+            return response()->json([
+                'message' => 'Tarefa não encontrada'
+            ], 404);
+        }
+
+        return response()->json($tarefa, 200);
+    }
+
+
+    public function update($id, Request $request)
     {
         DB::beginTransaction();
         try {
 
-            $tarefas = $request->Tarefa();
+            $tarefa = Tarefa::find($id);
+
+             if (!$tarefa) {
+                return response()->json([
+                    'error' => 'Tarefa não encontrada!',
+                ], 500);
+            }
 
             $dados = $request->validate([
                 'nome' => 'sometimes|string|max:255',
-                'email' => 'sometimes|email|max:255|unique:tarefas$tarefass,email,'.$tarefas->id_usuario.',id_usuario',
-                'telefone' => 'sometimes|string|max:20',
-                'senha' => 'sometimes|min:8',
-                'biografia' => 'sometimes|string|max:255',
-
+                'DataInicio' => 'sometimes|date',
+                'DataLimite' => 'sometimes|date',
+                'tipo' => 'sometimes|in:Trabalho,Estudo,Lazer',
+                'StatusTarefa' => 'sometimes|in:Pendente,Em Andamento,Concluída',
             ]);
 
+           
+            if (empty($dados)) {
+                return response()->json([
+                    'message' => 'Nenhum dado válido enviado'
+                ], 400);
+            }
 
-            $tarefas->update($dados);
+            $tarefa->update($dados);
 
             DB::commit();
             return response()->json([
                 'message' => 'Tarefa atualizado com sucesso',
-                'tarefas$tarefas' => $tarefas,
+                'tarefa' => $tarefa,
             ]);
 
         } catch (\Exception $e) {
@@ -99,14 +123,18 @@ class TarefasController extends Controller
         }
     }
 
-    public function excluir(Request $request)
+    public function excluir($id, Request $request)
     {
         DB::beginTransaction();
         try {
 
-            $tarefas = $request->Tarefa();
+            $tarefas = Tarefa::find($id);
 
-            $tarefas->tokens()->delete();
+            if (!$tarefas) {
+                return response()->json([
+                    'error' => 'Tarefa não encontrada!',
+                ], 500);
+            }
 
             $tarefas->delete();
 
