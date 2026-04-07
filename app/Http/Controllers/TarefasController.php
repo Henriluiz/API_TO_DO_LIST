@@ -16,8 +16,7 @@ class TarefasController extends Controller
                 'nome' => 'required|string|max:255',
                 'DataInicio' => 'required|date',
                 'DataLimite' => 'required|date',
-                'tipo' => 'required|in:Trabalho,Estudo,Lazer',
-                'StatusTarefa' => 'required|in:Pendente,Em Andamento,Concluída',
+                'tipo' => 'required|in:Trabalho,Estudo,Lazer'
             ]);
 
             $tarefa = Tarefa::create([
@@ -25,7 +24,7 @@ class TarefasController extends Controller
                 'DataInicio' => $validatedData['DataInicio'],
                 'DataLimite' => $validatedData['DataLimite'],
                 'tipo' => $validatedData['tipo'],
-                'StatusTarefa' => $validatedData['StatusTarefa'],
+                'StatusTarefa' => 'Pendente',
             ]);
 
 
@@ -90,15 +89,15 @@ class TarefasController extends Controller
                 ], 500);
             }
 
-            $dados = $request->validate([
-                'nome' => 'sometimes|string|max:255',
-                'DataInicio' => 'sometimes|date',
-                'DataLimite' => 'sometimes|date',
-                'tipo' => 'sometimes|in:Trabalho,Estudo,Lazer',
-                'StatusTarefa' => 'sometimes|in:Pendente,Em Andamento,Concluída',
-            ]);
+            if (Tarefa::find($id)->StatusTarefa === 'Pendente') {
+                $dados = ["StatusTarefa" => "Em Andamento"];
+            } else if (Tarefa::find($id)->StatusTarefa === 'Em Andamento') {
+                $dados = ["StatusTarefa" => "Concluída"];
+            } else {
+                $dados = ["StatusTarefa" => "Pendente"];
+            }
 
-           
+
             if (empty($dados)) {
                 return response()->json([
                     'message' => 'Nenhum dado válido enviado'
