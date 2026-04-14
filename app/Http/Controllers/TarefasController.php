@@ -9,7 +9,10 @@ use Illuminate\Support\Facades\DB;
 class TarefasController extends Controller
 {
     public function createTar(Request $request)
-    {
+    {   
+
+        $id_user = $request->id_user;
+
         DB::beginTransaction();
         try{
             $validatedData = $request->validate([
@@ -20,6 +23,7 @@ class TarefasController extends Controller
             ]);
 
             $tarefa = Tarefa::create([
+                'id_user' => $id_user,
                 'nome' => $validatedData['nome'],
                 'DataInicio' => $validatedData['DataInicio'],
                 'DataLimite' => $validatedData['DataLimite'],
@@ -45,10 +49,12 @@ class TarefasController extends Controller
         }
     }
 
-    public function tarefa()
+    public function tarefa(Request $request)
     {
         try{
-            $tarefas = Tarefa::all();;
+            $id_user = $request->id_user;
+
+            $tarefas = Tarefa::where('id_user', $id_user)->get();
 
             return response()->json([
                 'tarefa' => $tarefas,

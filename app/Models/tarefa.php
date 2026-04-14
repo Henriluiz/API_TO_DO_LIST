@@ -10,6 +10,7 @@ class Tarefa extends Authenticatable
     protected $table = 'tarefas';
 
     protected $fillable = [
+        'id_user',
         'nome',
         'DataInicio',
         'DataLimite',

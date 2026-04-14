@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Tarefa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -166,8 +167,13 @@ class UsersController extends Controller
         try {
 
             $user = $request->User();
+            $tarefa = $request->Tarefa();
 
             $user->tokens()->delete();
+
+            $tarefa->foreignId('usuario_id')
+            ->constrained('tbUser')
+            ->onDelete('cascade');
 
             $user->delete();
 

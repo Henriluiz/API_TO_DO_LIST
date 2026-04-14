@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('tarefas', function (Blueprint $table) {
            $table->id();
+           $table->unsignedBigInteger('id_user');
            $table->String('nome');
            $table->date('DataInicio');
            $table->date('DataLimite');
