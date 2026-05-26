@@ -22,5 +22,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/show/{nome}', [TarefasController::class, 'show']);
         Route::patch('/update/{id}', [TarefasController::class, 'update']);
         Route::delete('/excluir/{id}', [TarefasController::class, 'excluir']);
+
+        // routes/api.php — adicione esta linha:
+Route::get('/dashboard/stats', [TarefasController::class, 'dashboardStats']);
 });
 
